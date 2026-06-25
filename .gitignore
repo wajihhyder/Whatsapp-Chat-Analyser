@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Generated
+wordcloud.png
+
+# Privacy: never commit real chat exports or redaction artifacts.
+# Keep only sample_data/synthetic_chat.txt (safe, fake data).
+WhatsApp Chat with *.txt
+*redacted*.txt
+audit*.json
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

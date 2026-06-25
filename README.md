@@ -6,8 +6,9 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-dashboard-FF4B4B?logo=streamlit&logoColor=white)
 ![pandas](https://img.shields.io/badge/pandas-data-150458?logo=pandas&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Privacy: PII redaction](https://img.shields.io/badge/Privacy-PII%20redaction-2ea44f)
 
-Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app parses it into a tidy DataFrame, then renders a full analytics report. You can scope every view to the whole chat or to a single participant.
+Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app parses it into a tidy DataFrame, then renders a full analytics report. You can scope every view to the whole chat or to a single participant. A **privacy-by-design** step redacts personal data before anything is analysed — see [PRIVACY.md](PRIVACY.md).
 
 ## Features
 
@@ -18,6 +19,7 @@ Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app p
 - ☁️ **Word cloud** + most-common-words (with Hinglish stop-word filtering)
 - 😀 **Emoji analysis**: frequency table and pie chart
 - 🔍 **Per-user filtering**: analyse "Overall" or any single participant
+- 🔒 **PII redaction** (on by default): names, phone numbers, emails, CNICs and card numbers are pseudonymised before analysis — see [PRIVACY.md](PRIVACY.md)
 
 ---
 
@@ -27,7 +29,8 @@ Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app p
 flowchart LR
     A["Exported chat .txt"] --> B["preprocessor.preprocess()<br>regex split into messages + timestamps"]
     B --> C["pandas DataFrame<br>(user, message, date parts, period)"]
-    C --> D["helper.py analytics<br>stats / timelines / heatmap / emoji / wordcloud"]
+    C --> R["🔒 privacy.Redactor<br>pseudonymise PII (Person_1, Phone_2 …)"]
+    R --> D["helper.py analytics<br>stats / timelines / heatmap / emoji / wordcloud"]
     D --> E["app.py<br>Streamlit charts (matplotlib + seaborn)"]
 ```
 
@@ -57,11 +60,37 @@ Then in the sidebar, upload an exported chat (WhatsApp → a chat → ⋮ → *M
 ## Project Structure
 
 ```
-app.py             Streamlit UI and chart layout
-preprocessor.py    Regex parser: raw export -> structured DataFrame
-helper.py          All analytics (stats, timelines, activity, wordcloud, emoji)
-stop_hinglish.txt  Stop-word list for Hinglish text
+app.py                      Streamlit UI and chart layout
+preprocessor.py             Regex parser: raw export -> structured DataFrame
+helper.py                   All analytics (stats, timelines, activity, wordcloud, emoji)
+stop_hinglish.txt           Stop-word list for Hinglish text
+privacy/                    PII redaction package (see PRIVACY.md)
+  engines.py                  regex + Presidio detection engines
+  redactor.py                 orchestration: parse, detect, pseudonymise, report
+  pseudonymizer.py            consistent token mapping (GDPR Art. 4(5))
+  patterns.py                 email / phone / CNIC / IBAN / card patterns
+  report.py                   privacy / audit report (no real values)
+  llm_pass.py                 optional cloud LLM pass (OFF by default)
+  cli.py                      `python -m privacy.cli chat.txt -o clean.txt`
+  tests/                      unit tests (run offline, no extra installs)
+sample_data/synthetic_chat.txt   safe, fake chat for demos & tests
+PRIVACY.md                  privacy design, GDPR mapping, usage
 ```
+
+---
+
+## Privacy
+
+Chat exports are personal data. This project **redacts PII before any analysis**
+and never commits real conversations — `sample_data/synthetic_chat.txt` is
+fully synthetic. Sanitise an export from the command line:
+
+```bash
+python -m privacy.cli "WhatsApp Chat.txt" -o clean.txt --report
+```
+
+Full design, GDPR mapping, and the rationale for keeping detection local (and
+the optional LLM pass off by default) are in **[PRIVACY.md](PRIVACY.md)**.
 
 ---
 

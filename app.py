@@ -12,6 +12,28 @@ if uploader_file is not None:
     data= bytes_data.decode("utf-8")
     df = preprocessor.preprocess(data)
 
+    # --- Privacy by design: redact PII before any analysis ---------------
+    # The uploaded chat is personal data. Redacting here, right after parsing,
+    # means every chart, the word cloud and the "busy users" table downstream
+    # run on pseudonymised data (Person_1, Phone_2, ...) instead of real names
+    # and numbers. Runs locally — nothing is sent anywhere.
+    redact = st.sidebar.checkbox(
+        "🔒 Redact PII before analysis",
+        value=True,
+        help="Replace names, phone numbers, emails, CNICs and card numbers with "
+             "stable pseudonyms before anything is shown. Local & offline.",
+    )
+    if redact:
+        try:
+            from privacy import Redactor
+            from privacy.engines import build_engine
+
+            redactor = Redactor(engine=build_engine(prefer_presidio=False))
+            df = redactor.redact_dataframe(df)
+            with st.sidebar.expander("🔒 Privacy report"):
+                st.code(redactor.report().render())
+        except Exception as exc:  # never let redaction break the app
+            st.sidebar.warning(f"PII redaction unavailable: {exc}")
 
     user_list = df['user'].unique().tolist()
     if user_list.count('group_notification') > 0:
