@@ -2,7 +2,7 @@
 
 WhatsApp chat exports are **personal data**: real names, phone numbers, emails,
 national ID numbers, even card numbers and home locations. Analysing or sharing
-them — or committing a sample to a public repo — exposes all of it.
+them, or committing a sample to a public repo, exposes all of it.
 
 This module (`privacy/`) removes that data *before* the chat is analysed,
 displayed, or shared, and is designed around a single principle:
@@ -18,22 +18,22 @@ displayed, or shared, and is designed around a single principle:
 - **Pseudonymises** rather than deletes: each value is replaced by a stable
   token (`Person_1`, `Phone_2`, `CNIC_1` …). The **same value always maps to the
   same token**, so the analytics still work — you can still count messages per
-  person and build per-user timelines — but the identities are gone. This is
+  person and build per-user timelines, but the identities are gone. This is
   *pseudonymisation* in the sense of **GDPR Art. 4(5)**, not mere masking.
 - **Reports** what it removed (counts per category, number of distinct data
-  subjects) **without ever printing a single real value** — the audit trail a
+  subjects) **without ever printing a single real value**, the audit trail a
   data-protection reviewer expects.
 
 ## Why local-first (and why the LLM pass is off by default)
 
 The detection runs **entirely on your machine**. There is an *optional* pass
-(`--llm`) that asks an LLM to catch context-dependent PII the patterns miss —
+(`--llm`) that asks an LLM to catch context-dependent PII that the patterns miss,
 but it is **disabled by default and gated behind an explicit flag + API key**,
 because sending the chat to a third-party model to find PII means the very data
 you are protecting leaves your machine. For a privacy tool that is usually the
 wrong trade-off. Treating "should we send this to the cloud?" as a deliberate,
-defaulted-to-no decision *is* the privacy engineering — see the warning at the
-top of [`privacy/llm_pass.py`](privacy/llm_pass.py).
+defaulted-to-no decision *is* the privacy engineering (see the warning at the
+top of [`privacy/llm_pass.py`](privacy/llm_pass.py)).
 
 ## How it maps to data-protection practice
 
@@ -62,7 +62,7 @@ chat .txt ──▶ Redactor ──▶ redacted .txt + privacy report
 ```
 
 The **regex engine has no dependencies** so the tool runs out of the box. The
-**Presidio engine is a strict superset** — it reuses the exact same structured
+**Presidio engine is a strict superset**, it reuses the exact same structured
 detection and adds NER on top, so enabling it can only catch *more*, never less.
 
 ## Usage
