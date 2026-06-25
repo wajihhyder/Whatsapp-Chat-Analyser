@@ -1,0 +1,12 @@
+# The redaction core runs on the Python standard library alone — the offline
+# RegexEngine and the CLI need nothing here. These are OPTIONAL enhancements.
+
+# Better recall on free-text names/places via spaCy NER (PresidioEngine).
+# After installing, download a model, e.g.:  python -m spacy download en_core_web_sm
+# (en_core_web_lg gives noticeably better name/place recall.)
+presidio-analyzer>=2.2
+spacy>=3.4
+
+# Only for the optional --llm context pass, which is OFF by default.
+# ⚠️ This sends chat content to a third-party model — see PRIVACY.md before enabling.
+anthropic>=0.40
