@@ -8,7 +8,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Privacy: PII redaction](https://img.shields.io/badge/Privacy-PII%20redaction-2ea44f)
 
-Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app parses it into a tidy DataFrame, then renders a full analytics report. You can scope every view to the whole chat or to a single participant. A **privacy-by-design** step redacts personal data before anything is analysed — see [PRIVACY.md](PRIVACY.md).
+Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app parses it into a tidy DataFrame, then renders a full analytics report. You can scope every view to the whole chat or to a single participant. A **privacy-by-design** step redacts personal data before anything is analysed (see [PRIVACY.md](PRIVACY.md)).
 
 ## Features
 
@@ -19,7 +19,7 @@ Upload a `.txt` export of any WhatsApp conversation (group or 1:1) and the app p
 - ☁️ **Word cloud** + most-common-words (with Hinglish stop-word filtering)
 - 😀 **Emoji analysis**: frequency table and pie chart
 - 🔍 **Per-user filtering**: analyse "Overall" or any single participant
-- 🔒 **PII redaction** (on by default): names, phone numbers, emails, CNICs and card numbers are pseudonymised before analysis — see [PRIVACY.md](PRIVACY.md)
+- 🔒 **PII redaction** (on by default): names, phone numbers, emails, CNICs and card numbers are pseudonymised before analysis (see [PRIVACY.md](PRIVACY.md))
 
 ---
 
